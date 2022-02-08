@@ -35,11 +35,24 @@ const userRoutes = require('./routes/users');
 const eventRoutes = require('./routes/events');
 const eventRegRoutes =require('./routes/e_register');
 const absRoutes =require('./routes/abstracts');
+const catRoutes = require('./routes/categorie'); 
+const roleRoutes = require('./routes/role');
+const eventregperRoutes = require('./routes/event_reg_person');
+const eventAbsTrackRoutes = require('./routes/event_abs_track');
+const eventPerRoutes = require('./routes/event_person');
+const absReviewRoutes = require('./routes/abstract_review')
 
 app.use("/user", userRoutes);
 app.use("/event",eventRoutes);
 app.use("/events",eventRegRoutes);
 app.use("/events",absRoutes);
+app.use("/categorie",catRoutes);
+app.use("/role",roleRoutes);
+app.use("/events/reg/person",eventregperRoutes);
+app.use("events/track",eventAbsTrackRoutes);
+app.use("/events",eventPerRoutes);
+app.use("/events/track",absReviewRoutes);
+
 
 app.get('/', (req, res) => res.send("Hello"));
 

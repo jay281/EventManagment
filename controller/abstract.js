@@ -1,14 +1,15 @@
-const user = require("../models/User");
-const event = require("../models/Event");
-const fil = require("../models/File");
-const abstract = require("../models/Abstract");
+const user = require("../models/User/User");
+const tk = require("../models/event/track");
+const fil = require("../models/Abstract/File");
+const abstract = require("../models/Abstract/Abstract");
 const moment = require("moment");
 const fs = require("fs");
-
+const e = require("cors");
+const ptrack = require("../models/Abstract/proposed_for_track");
 
 
 exports.abs_submit = async (req, res) => {
-    let {title,description,sub_comment} = req.body;
+    let {title,description,sub_comment,submitted_by} = req.body;
 
     
     if (!title) {
@@ -43,18 +44,33 @@ exports.abs_submit = async (req, res) => {
       });
       return;
     }
-    const date = new Date();
+    
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
-    console.log("==================")
-    console.log(today.toISOString());
-     const abst = await abstract.create({
+    const abst = await abstract.create({
       title: title,
       description :description,
       submission_comment : sub_comment,
       submitted_dt :today.toISOString(),
+      submitted_by:submitted_by,
       eid: eid
     });
+
+    const track = await tk.create(
+      {
+        title:title,
+        description:description,
+        position: 0,
+        eid:eid
+      }
+    )
+
+    await ptrack.create(
+      {
+        trackid:track.trackid
+      }
+    )
+
     const fl =req.files.file;
     const filename = fl.name;
     const filepath = `../../resources/abstract/${eid}/${filename}`
@@ -98,7 +114,7 @@ exports.abstract_by_id =(req,res) =>{
     return;
   }
   try{
-    user.findOne({ where: {absid: req.params.id} })
+    abstract.findOne({ where: {absid: req.params.id} })
      .then(data=>{
       if (data != null) {
         res.send(data);

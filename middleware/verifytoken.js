@@ -13,6 +13,21 @@ module.exports = (req, res, next) => {
     }
 };
 
+// module.exports = (req,res,next) =>{
+//     const token = req.cookies.access_token;
+//     if (!token) {
+//         return res.sendStatus(403);
+//     }
+//     try {
+//         const data = jwt.verify(token, process.env.JWT_KEY);
+//         req.user = data;
+//         next();
+//     } catch (error) {
+//         return res.status(401).json({
+//         message: 'Auth failed'});
+//     }
+// };
+
 // module.exports = (req, res, next) => {
 //     const t_verify = req.cookies.jwt
 //     console.log(t_verify);

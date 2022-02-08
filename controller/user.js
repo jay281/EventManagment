@@ -1,4 +1,4 @@
-const user = require("../models/User");
+const user = require("../models/User/User");
 const bcrypt = require("bcrypt");
 const jwt=require("jsonwebtoken")
 
@@ -96,7 +96,7 @@ exports.user_login = (req, res, next) => {
           //   email: req.body.email,  
           //   id: user.id,
           // });   
-          //res.cookie('jwt',token, { httpOnly: true, secure: true, maxAge: 3600000 })
+          //res.cookie('access_token',token, { httpOnly: true, secure: true, maxAge: 3600000 })
           return res.status(200).json({
             message: "Auth successful",
             token: token
@@ -252,3 +252,4 @@ exports.user_by_lname =(req,res,next) =>{
       res.status(500).json({err:err.message});
   }
 };
+

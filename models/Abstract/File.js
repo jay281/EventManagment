@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
-const db = require('../config/database');
-const Abstract = require('../models/Abstract');
+const db = require('../../config/database');
+const Abstract = require('../../models/Abstract/Abstract');
 
 const File = db.define('file', {
   fileid:{

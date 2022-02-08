@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const user = require('../models/User');
+const user = require('../models/User/User');
 
 
 const UserController = require('../controller/user');
@@ -14,5 +14,6 @@ router.get("/",checkauth,checkadmin,UserController.all_user);
 router.get("/search/:id",checkauth,checkadmin,UserController.user_by_id);
 router.post("/search",checkauth,checkadmin,UserController.user_by_fname);
 router.post("/search",checkauth,checkadmin,UserController.user_by_email);
+
 
 module.exports=router;

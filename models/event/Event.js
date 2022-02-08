@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-const db = require('../config/database');
+const db = require('../../config/database');
+const cat = require('../categorie/categorie');
 
 const Event = db.define('event', {
   eid:{
@@ -36,6 +37,7 @@ const Event = db.define('event', {
   }
 });
 
+Event.belongsTo(cat,{foreignKey : 'catid'});
 
 Event.sync().then(() => {
     console.log('table created');

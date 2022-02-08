@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const db = require('../config/database');
-const User = require('../models/User');
-const Event = require('../models/Event');
+const db = require('../../config/database');
+const User = require('../../models/User/User');
+const Event = require('../../models/event/Event');
 
 const E_Register = db.define('e_register', {
   regid:{

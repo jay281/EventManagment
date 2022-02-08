@@ -1,5 +1,7 @@
-const event = require("../models/Event");
 
+const event = require("../models/event/Event");
+const rl = require("../models/event/role");
+const cat = require("../models/categorie/categorie");
 
 
 exports.event_create =async  (req, res) => {
@@ -58,7 +60,8 @@ exports.event_create =async  (req, res) => {
       });
       return;
     }
-    event.create({
+    const cate = await cat.findOne({where : {title : e_type} });
+    const ev = await event.create({
         title:title,
         e_type:e_type,
         description:description,
@@ -67,20 +70,18 @@ exports.event_create =async  (req, res) => {
         address:address,
         room_id:room_id,
         room_name:room_name,
-        veneue_id:veneue_id
-      })
-      .then(result => {
-        console.log(result);
-        res.status(201).json({
-          message: "Event created"
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json({
-          error: err
-        });
-      });
+        veneue_id:veneue_id,
+        catid : cate.catid
+    })
+
+    await rl.create({
+      eid:ev.eid,
+      name:"manger"
+    }).then(
+      res.send({message : "Event created"})
+    )
+
+
 };
 
 exports.event_update = (req, res) => {
