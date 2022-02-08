@@ -1,7 +1,6 @@
 
 const event = require("../models/event/Event");
 const rl = require("../models/event/role");
-const cat = require("../models/categorie/categorie");
 
 
 exports.event_create =async  (req, res) => {
@@ -60,7 +59,9 @@ exports.event_create =async  (req, res) => {
       });
       return;
     }
-    const cate = await cat.findOne({where : {title : e_type} });
+    const catid = req.params.id
+    console.log(catid)
+
     const ev = await event.create({
         title:title,
         e_type:e_type,
@@ -71,7 +72,7 @@ exports.event_create =async  (req, res) => {
         room_id:room_id,
         room_name:room_name,
         veneue_id:veneue_id,
-        catid : cate.catid
+        catid : catid
     })
 
     await rl.create({

@@ -14,6 +14,7 @@ router.get("/",checkauth,checkadmin,UserController.all_user);
 router.get("/search/:id",checkauth,checkadmin,UserController.user_by_id);
 router.post("/search",checkauth,checkadmin,UserController.user_by_fname);
 router.post("/search",checkauth,checkadmin,UserController.user_by_email);
+router.get("/test",checkauth,checkadmin,UserController.testing);
 
 
 module.exports=router;

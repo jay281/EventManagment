@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
+const jwtt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
-        const decoded = jwt.verify(token, process.env.JWT_KEY);
+        const decoded = jwtt.verify(token, process.env.JWT_KEY);
         req.user = decoded;
         next();
     } catch (error) {
@@ -14,12 +14,12 @@ module.exports = (req, res, next) => {
 };
 
 // module.exports = (req,res,next) =>{
-//     const token = req.cookies.access_token;
+//     const token = req.cookies.jwt;
 //     if (!token) {
 //         return res.sendStatus(403);
 //     }
 //     try {
-//         const data = jwt.verify(token, process.env.JWT_KEY);
+//         const data = jwtt.verify(token, process.env.JWT_KEY);
 //         req.user = data;
 //         next();
 //     } catch (error) {

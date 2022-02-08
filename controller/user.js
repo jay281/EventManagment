@@ -6,7 +6,7 @@ const jwt=require("jsonwebtoken")
 
 
 exports.user_signup =async  (req, res) => {
-            let {fname,lname,email,password}=req.body;
+            let {fname,lname,email,dob,address_line1,address_line2,city,state,country,primary_phone_number,alternate_phone_number,alternative_email_address,username,password}=req.body;
             if (!fname) {
               res.status(400).send({
                 message: "First name can not be empty!"
@@ -43,6 +43,16 @@ exports.user_signup =async  (req, res) => {
                 fname:fname,
                 lname:lname,
                 email:email,
+                dob:dob,
+                address_line1:address_line1,
+                address_line2:address_line2,
+                city:city,
+                state:state,
+                country:country,
+                primary_phone_number:primary_phone_number,
+                alternate_phone_number:alternate_phone_number,
+                alternative_email_address:alternative_email_address,
+                username:username,
                 password:hash
               })
               .then(result => {
@@ -60,13 +70,13 @@ exports.user_signup =async  (req, res) => {
             }
 
 exports.user_login = (req, res, next) => {
-  if (!req.body.email) {
+  if (!req.body.username) {
     res.status(400).send({
       message: "Please enter the email!"
     });
     return;
   }
-  user.findOne({ where: {email: req.body.email} })
+  user.findOne({ where: {username: req.body.username} })
     .then(user => {
       if (user.length < 1) {
         return res.status(401).json({
@@ -82,7 +92,7 @@ exports.user_login = (req, res, next) => {
         if (result) {
           const token = jwt.sign(
             {
-              email: user.email,
+              username: user.username,
               id:user.id,
               is_admin:user.is_admin
             },
@@ -96,7 +106,7 @@ exports.user_login = (req, res, next) => {
           //   email: req.body.email,  
           //   id: user.id,
           // });   
-          //res.cookie('access_token',token, { httpOnly: true, secure: true, maxAge: 3600000 })
+          //res.cookie('jwt',token, { httpOnly: true, secure: true, maxAge: 3600000 })
           return res.status(200).json({
             message: "Auth successful",
             token: token
@@ -253,3 +263,7 @@ exports.user_by_lname =(req,res,next) =>{
   }
 };
 
+
+exports.testing =(req,res,next) =>{
+  res.send("Success");
+}
