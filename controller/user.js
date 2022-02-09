@@ -6,7 +6,7 @@ const jwt=require("jsonwebtoken")
 
 
 exports.user_signup =async  (req, res) => {
-            let {fname,lname,email,dob,address_line1,address_line2,city,state,country,primary_phone_number,alternate_phone_number,alternative_email_address,username,password}=req.body;
+            let {fname,lname,email,dob,address_line1,address_line2,city,state,country,primary_phone_number,alternate_phone_number,alternative_email_address,affiliation_name,affiliation_email_address,username,password}=req.body;
             if (!fname) {
               res.status(400).send({
                 message: "First name can not be empty!"
@@ -52,6 +52,8 @@ exports.user_signup =async  (req, res) => {
                 primary_phone_number:primary_phone_number,
                 alternate_phone_number:alternate_phone_number,
                 alternative_email_address:alternative_email_address,
+                affiliation_name:affiliation_name,
+                affiliation_email_address:affiliation_email_address,
                 username:username,
                 password:hash
               })
@@ -263,7 +265,32 @@ exports.user_by_lname =(req,res,next) =>{
   }
 };
 
+exports.user_update = (req, res) => {
+  const name = req.params.uname;
+  if (!name) {
+    res.status(400).send({
+      message: "Name can not be empty!"
+    });
+    return;
+  }
 
-exports.testing =(req,res,next) =>{
-  res.send("Success");
-}
+  user.update(req.body, {
+    where: { username: name }
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: "User was updated successfully."
+        });
+      } else {
+        res.send({
+          message: `Cannot update User with name=${name}. Maybe User was not found or req.body is empty!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error updating User with username=" + name
+      });
+    });
+};

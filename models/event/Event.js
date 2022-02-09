@@ -18,10 +18,10 @@ const Event = db.define('event', {
     type: Sequelize.STRING
   },
   start_time: {
-    type: Sequelize.TIME
+    type: Sequelize.DATE
   },
   end_time: {
-    type: Sequelize.TIME
+    type: Sequelize.DATE
   },
   address: {
     type: Sequelize.STRING
@@ -39,7 +39,7 @@ const Event = db.define('event', {
 
 Event.belongsTo(cat,{foreignKey : 'catid'});
 
-Event.sync().then(() => {
+Event.sync({alter:true}).then(() => {
     console.log('table created');
   });
 

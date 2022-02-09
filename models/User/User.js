@@ -50,14 +50,21 @@ const User = db.define('user', {
     type: Sequelize.BOOLEAN,
     defaultValue: true
   },
+  affiliation_name:{
+    type:Sequelize.STRING
+  },
+  affiliation_email_address:{
+    type:Sequelize.STRING
+  },
   is_admin:{
     type: Sequelize.BOOLEAN,
     defaultValue: false
-  }
+  },
+
 });
 
 
-User.sync().then(() => {
+User.sync({alter:true}).then(() => {
     console.log('table created');
   });
 

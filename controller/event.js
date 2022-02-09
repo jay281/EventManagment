@@ -59,6 +59,7 @@ exports.event_create =async  (req, res) => {
       });
       return;
     }
+
     const catid = req.params.id
     console.log(catid)
 
@@ -163,8 +164,15 @@ exports.event_by_id =(req,res) =>{
 };
 
 exports.all_event =(req,res) =>{
+  const catid = req.params.id
+  if(!catid){
+    res.status(400).send({
+      message: "ID can not be empty!"
+    });
+    return;
+  }
   try{
-    event.findAll()
+    event.findAll({where:{catid:catid}})
     .then(data =>{
       res.send(data);
     })

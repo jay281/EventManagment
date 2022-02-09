@@ -10,10 +10,10 @@ const EventController = require('../controller/event');
 
 
 router.post("/:id/event/create",checkAuth, checkAdmin,EventController.event_create);
-router.put("/update/:id",checkAuth, checkAdmin,EventController.event_update);
-router.post("/delete/:id",checkAuth, checkAdmin,EventController.event_delete);
-router.get("/",checkAuth,checkAdmin,EventController.all_event);
-router.get("/:id",checkAuth,checkAdmin,EventController.event_by_id);
+router.put("/:cid/event/update/:id",checkAuth, checkAdmin,EventController.event_update);
+router.post("/:cid/delete/:id",checkAuth, checkAdmin,EventController.event_delete);
+router.get("/:id/events",checkAuth,checkAdmin,EventController.all_event);
+router.get("/:cid/event/:id",checkAuth,checkAdmin,EventController.event_by_id);
 
 
 module.exports=router;
