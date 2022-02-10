@@ -34,6 +34,18 @@ const Event = db.define('event', {
   },
   veneue_id: {
     type: Sequelize.INTEGER
+  },
+  timezone:{
+    type:Sequelize.STRING
+  },
+  map_url:{
+    type:Sequelize.STRING
+  },
+  protection_mode:{
+    type:Sequelize.STRING
+  },
+  keyword:{
+    type:Sequelize.STRING
   }
 });
 

@@ -4,7 +4,7 @@ const rl = require("../models/event/role");
 
 
 exports.event_create =async  (req, res) => {
-    let {title,e_type,description,start_time,end_time,address,room_id,room_name,veneue_id}=req.body;
+    let {title,e_type,description,start_time,end_time,timezone,address,room_id,room_name,veneue_id,map_url,keyword,protection_mode}=req.body;
     if (!title) {
       res.status(400).send({
         message: "title can not be empty!"
@@ -73,6 +73,10 @@ exports.event_create =async  (req, res) => {
         room_id:room_id,
         room_name:room_name,
         veneue_id:veneue_id,
+        timezone:timezone,
+        map_url:map_url,
+        keyword:keyword,
+        protection_mode:protection_mode,
         catid : catid
     })
 
