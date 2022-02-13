@@ -51,7 +51,7 @@ const Event = db.define('event', {
 
 Event.belongsTo(cat,{foreignKey : 'catid'});
 
-Event.sync({alter:true}).then(() => {
+Event.sync().then(() => {
     console.log('table created');
   });
 

@@ -168,15 +168,8 @@ exports.event_by_id =(req,res) =>{
 };
 
 exports.all_event =(req,res) =>{
-  const catid = req.params.id
-  if(!catid){
-    res.status(400).send({
-      message: "ID can not be empty!"
-    });
-    return;
-  }
   try{
-    event.findAll({where:{catid:catid}})
+    event.findAll()
     .then(data =>{
       res.send(data);
     })

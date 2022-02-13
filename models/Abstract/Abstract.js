@@ -51,7 +51,7 @@ const Abstract = db.define('abstract', {
 Abstract.belongsTo(Event,{foreignKey : 'eid'});
 
 
-Abstract.sync({alter:true}).then(() => {
+Abstract.sync().then(() => {
     console.log('table created');
   });
 
