@@ -32,10 +32,10 @@ const User = db.define('user', {
     type: Sequelize.STRING
   },
   primary_phone_number: {
-    type: Sequelize.INTEGER
+    type: Sequelize.STRING
   },
   alternative_phone_number: {
-    type: Sequelize.INTEGER
+    type: Sequelize.STRING
   },
   alternative_email_address: {
     type: Sequelize.STRING
@@ -64,7 +64,7 @@ const User = db.define('user', {
 });
 
 
-User.sync({alter:true}).then(() => {
+User.sync().then(() => {
     console.log('table created');
   });
 

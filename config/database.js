@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 
-module.exports =  new Sequelize('postgres','postgres','password', {
+module.exports =  new Sequelize('postgres','postgres','maurya', {
   host: 'localhost',
   dialect: 'postgres',
   operatorsAliases: false,
