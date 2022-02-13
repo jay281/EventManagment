@@ -14,7 +14,9 @@ router.get("/",checkauth,checkadmin,UserController.all_user);
 router.get("/search/:id",checkauth,checkadmin,UserController.user_by_id);
 router.post("/search",checkauth,checkadmin,UserController.user_by_fname);
 router.post("/search",checkauth,checkadmin,UserController.user_by_email);
-router.post("/:uname/edit",checkauth,UserController.user_update);
+router.post("/:uname/edit/personal",checkauth,UserController.user_update);
+router.post("/:uname/edit/affiliation",checkauth,UserController.user_update);
+router.post("/:uname/edit/credential",checkauth,UserController.user_update);
 
 
 module.exports=router;
