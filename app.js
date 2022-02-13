@@ -43,6 +43,7 @@ const eventPerRoutes = require('./routes/event_person');
 const absReviewRoutes = require('./routes/abstract_review')
 
 app.use("/user", userRoutes);
+app.use("/events",eventRoutes);
 app.use("/category",eventRoutes);
 app.use("/events",eventRegRoutes);
 app.use("/events",absRoutes);
