@@ -108,7 +108,7 @@ exports.user_login = (req, res, next) => {
           //   email: req.body.email,  
           //   id: user.id,
           // });   
-          //res.cookie('jwt',token, { httpOnly: true, secure: true, maxAge: 3600000 })
+          res.cookie('jwt',token, { httpOnly: true, secure: true, maxAge: 3600000 })
           return res.status(200).json({
             message: "Auth successful",
             token: token
