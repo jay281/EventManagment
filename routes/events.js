@@ -9,7 +9,7 @@ const checkAdmin = require('../middleware/isAdmin');
 const EventController = require('../controller/event');
 
 
-router.post("/:id/events/create",checkAuth, checkAdmin,EventController.event_create);
+router.post("/:id/events/create",EventController.event_create);
 router.put("/:cid/event/update/:id",checkAuth, checkAdmin,EventController.event_update);
 router.post("/:cid/delete/:id",checkAuth, checkAdmin,EventController.event_delete);
 router.get("/list",EventController.all_event);

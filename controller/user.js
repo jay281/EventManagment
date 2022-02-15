@@ -108,7 +108,7 @@ exports.user_login = (req, res, next) => {
           //   email: req.body.email,  
           //   id: user.id,
           // });   
-          //res.cookie('jwt',token, { httpOnly: true, secure: true, maxAge: 3600000 })
+          res.cookie('jwt',token, { httpOnly: true, secure: true, maxAge: 3600000 })
           return res.status(200).json({
             message: "Auth successful",
             token: token
@@ -267,6 +267,7 @@ exports.user_by_lname =(req,res,next) =>{
 
 exports.user_update = (req, res) => {
   const name = req.params.uname;
+  console.log(req.body)
   if (!name) {
     res.status(400).send({
       message: "Name can not be empty!"
@@ -293,4 +294,48 @@ exports.user_update = (req, res) => {
         message: "Error updating User with username=" + name
       });
     });
+};
+
+exports.user_pass_update = async (req,res) =>{
+  let {username,password} = req.body
+  if(!username){
+    res.status(400).send({
+      message: "UserName can not be empty!"
+    });
+    return;
+  }
+  if(!password){
+    res.status(400).send({
+      message: "Password can not be empty!"
+    });
+    return;
+  }
+  let hash= await bcrypt.hash(password,10);
+  const us = await user.findOne({where:{username:username}})
+  if(!us)
+  {
+    res.status(400).send({
+      message: "User Not found!"
+    });
+    return;
+  }
+  us.password = hash;
+  await us.save()
+  .then(num => {
+    if (num == 1) {
+      res.send({
+        message: "User was updated successfully."
+      });
+    } else {
+      res.send({
+        message: `Cannot update User with name=${username}. Maybe User was not found or req.body is empty!`
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: "Error updating User with username=" + username
+    });
+  });
+
 };
