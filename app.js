@@ -41,6 +41,7 @@ const eventregperRoutes = require('./routes/event_reg_person');
 const eventAbsTrackRoutes = require('./routes/event_abs_track');
 const eventPerRoutes = require('./routes/event_person');
 const absReviewRoutes = require('./routes/abstract_review')
+const authRoutes = require('./routes/auth')
 
 app.use("/user", userRoutes);
 app.use("/events",eventRoutes);
@@ -53,6 +54,7 @@ app.use("/events/reg/person",eventregperRoutes);
 app.use("events/track",eventAbsTrackRoutes);
 app.use("/events",eventPerRoutes);
 app.use("/events/track",absReviewRoutes);
+app.use("/",authRoutes);
 
 
 app.get('/', (req, res) => res.send("Hello"));

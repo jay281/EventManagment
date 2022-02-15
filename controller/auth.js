@@ -8,6 +8,7 @@ const { Op, where } = require("sequelize");
 
 exports.forgot_Password = async(req,res)=>{
     
+    console.log(req.body.email)
     const us = await user.findOne({where:{email:req.body.email}});
     if(!us){
         return res.status(422).json({error:"User dont exists with that email"});
@@ -25,11 +26,11 @@ exports.forgot_Password = async(req,res)=>{
             }).then((results)=>{
                 transporter.sendMail({
                     to: us.email,
-                    from:"no-replay@ipr.com",
+                    from:"no-reply@ipr.com",
                     subject:"password reset",
                     html:`
                     <p>You requested for password reset</p>
-                    <h5>click in this <a href="http://localhost:5000/reset/${token}">link</a> to reset password</h5>
+                    <h5>click in this <a href="http://localhost:4200/reset/${token}">link</a> to reset password</h5>
                     `
                 })
             })
@@ -48,7 +49,8 @@ exports.forgot_Password = async(req,res)=>{
   
 exports.ResetNewPassword = async(req,res)=>{
    const newPassword = req.body.password
-   const sentToken = req.params.token
+   const sentToken = req.body.token
+   console.log(sentToken,newPassword)
    const rt = await retoken.findOne({where:{reset_pass_token:sentToken,expire_token:{[Op.gt]:Date.now()}}})
    if(!rt){
       return res.status(422).json({error:"Try again session expired"})
