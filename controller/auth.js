@@ -4,7 +4,7 @@ const jwt=require("jsonwebtoken")
 const crypto = require('crypto');
 const retoken = require('../models/User/Reset_Token');
 const transporter = require('../utils/Mailing_system');
-
+const { Op, where } = require("sequelize");
 
 exports.forgot_Password = async(req,res)=>{
     
@@ -49,20 +49,21 @@ exports.forgot_Password = async(req,res)=>{
 exports.ResetNewPassword = async(req,res)=>{
    const newPassword = req.body.password
    const sentToken = req.params.token
-   const rt = await retoken.findOne({where:{reset_pass_token:sentToken,expire_token:{$gt:Date.now()}}})
+   const rt = await retoken.findOne({where:{reset_pass_token:sentToken,expire_token:{[Op.gt]:Date.now()}}})
    if(!rt){
       return res.status(422).json({error:"Try again session expired"})
    }
    else{
-     let hash = bcrypt.hash(newPassword,10)
-     user.password = hash
-     rt.reset_pass_token = undefined
-     rt.expire_token = undefined
+    
+     let hash = await bcrypt.hash(newPassword,10)
+     const us = await user.findOne({where:{uid:rt.uid}})
+     us.password = hash
+     rt.reset_pass_token = null
+     rt.expire_token = null
      await rt.save();
-     user.save().then((saveduser)=>{
-        res.json({message:"password updated success"})
-      })
-     
+     await us.save();
+    res.json({message:"password updated success"})
+
    }
 }
   
