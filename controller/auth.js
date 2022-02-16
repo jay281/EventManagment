@@ -4,7 +4,8 @@ const jwt=require("jsonwebtoken")
 const crypto = require('crypto');
 const retoken = require('../models/User/Reset_Token');
 const transporter = require('../utils/Mailing_system');
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
+const etoken = require('../models/User/Email_Token');
 
 exports.forgot_Password = async(req,res)=>{
     
@@ -69,3 +70,23 @@ exports.ResetNewPassword = async(req,res)=>{
    }
 }
   
+
+
+exports.VerifyEmail = async(req,res)=>{
+    const sentToken = req.body.token
+    console.log()
+    const et = await etoken.findOne({where:{email_token:sentToken}})
+    if(!et){
+       return res.status(422).json({error:"Try again session expired"})
+    }
+    else{
+      const us = await user.findOne({where:{uid:et.uid}})
+      et.email_token = null
+      et.expire_token = null
+      us.is_pending = false
+      await et.save();
+      await us.save();
+     res.json({message:"Email verified"})
+ 
+    }
+ }  

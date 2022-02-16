@@ -1,9 +1,10 @@
 const user = require("../models/User/User");
 const bcrypt = require("bcrypt");
 const jwt=require("jsonwebtoken")
-
-
-
+const crypto = require('crypto');
+const retoken = require('../models/User/Reset_Token');
+const transporter = require('../utils/Mailing_system');
+const etoken = require('../models/User/Email_Token')
 
 exports.user_signup =async  (req, res) => {
             let {fname,lname,email,dob,address_line1,address_line2,city,state,country,primary_phone_number,alternate_phone_number,alternative_email_address,affiliation_name,affiliation_email_address,username,password}=req.body;
@@ -39,7 +40,7 @@ exports.user_signup =async  (req, res) => {
               });
               return;
             }
-            await user.create({
+            const usr = await user.create({
                 fname:fname,
                 lname:lname,
                 email:email,
@@ -56,75 +57,105 @@ exports.user_signup =async  (req, res) => {
                 affiliation_email_address:affiliation_email_address,
                 username:username,
                 password:hash
-              })
-              .then(result => {
-                console.log(result);
-                res.status(201).json({
-                  message: "User created"
-                });
-              })
-              .catch(err => {
-                console.log(err);
-                res.status(500).json({
-                  error: err
-                });
               });
-            }
+              
+              await crypto.randomBytes(32,async (err,buffer) =>{
+                if(err){
+                    console.log(err)
+                }
+                const token= buffer.toString("hex");
+                await etoken.create({
+                    email_token : token,
+                    expire_token : Date.now(),
+                    uid :usr.uid
+                }).then((results)=>{
+                    transporter.sendMail({
+                        to: usr.email,
+                        from:"no-replay@ipr.com",
+                        subject:"Verify Email",
+                        html:`
+                        <p>You requested for verify email</p>
+                        <h5>click in this <a href="http://localhost:4200/verify/${token}">link</a> to verify email</h5>
+                        `
+                    })
+                })
+            
+                res.json({message:"Please check your email for verification!!!!!!!"})
+              })
+              
+  }
 
-exports.user_login = (req, res, next) => {
+exports.user_login = async(req, res, next) => {
   if (!req.body.username) {
     res.status(400).send({
       message: "Please enter the email!"
     });
     return;
   }
-  user.findOne({ where: {username: req.body.username} })
-    .then(user => {
-      if (user.length < 1) {
-        return res.status(401).json({
-          message: "Not found"
-        });
+  const us = await user.findOne({where:{username:req.body.username}});
+  const validPass = await bcrypt.compare(req.body.password, us.password)
+  if(!validPass){
+    return res.status(400).send({ error: "Invalid Username or Password." })
+  }
+  if(us){
+      if(us.is_pending){
+        
+          const emt = await etoken.findOne({where:{uid:us.uid}})
+          const token= emt.email_token;
+          console.log(token)
+          transporter.sendMail({
+                  to: us.email,
+                  from:"no-replay@ipr.com",
+                  subject:"Verify Email",
+                  html:`
+                  <p>You requested for Verify Email</p>
+                  <h5>click in this <a href="http://localhost:4200/verify/${token}">link</a> to verify email</h5>
+                  `
+              })
+          
+      
+          res.json({message:"Please check your email for verification!"})
+        
+
+
       }
-      bcrypt.compare(req.body.password, user.password, (err, result) => {
-        if (err) {
-          return res.status(401).json({
-            message: "Auth failed"
+      else{
+        bcrypt.compare(req.body.password, us.password, (err, result) => {
+          if (err) {
+            return res.status(401).json({
+              message: "Auth failed"
+            });
+          }
+          if (result) {
+            const token = jwt.sign(
+              {
+                username: us.username,
+                id:us.uid,
+                is_admin:us.is_admin      
+              },
+              process.env.JWT_KEY,
+              {
+                expiresIn: "1h"
+              }
+            );
+            return res.status(200).json({
+              message: "Auth successful",
+              token: token
+            });
+          }
+          res.status(401).json({
+            message: "Went wrong"
           });
-        }
-        if (result) {
-          const token = jwt.sign(
-            {
-              username: user.username,
-              id:user.id,
-              is_admin:user.is_admin
-            },
-            process.env.JWT_KEY,
-            {
-              expiresIn: "1h"
-            }
-          );
-          // res.header("auth-token", token).send({
-          //   token,
-          //   email: req.body.email,  
-          //   id: user.id,
-          // });   
-          res.cookie('jwt',token, { httpOnly: true, secure: true, maxAge: 3600000 })
-          return res.status(200).json({
-            message: "Auth successful",
-            token: token
-          });
-        }
-        res.status(401).json({
-          message: "Went wrong"
-        });
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        error: err
-      });
+        })
+      
+      }
+  }
+  else{
+    return res.status(401).json({
+      message: "Not found"
     });
+  }
+ 
 };
 
 exports.all_user =(req,res) =>{
@@ -267,7 +298,6 @@ exports.user_by_lname =(req,res,next) =>{
 
 exports.user_update = (req, res) => {
   const name = req.params.uname;
-  console.log(req.body)
   if (!name) {
     res.status(400).send({
       message: "Name can not be empty!"
@@ -339,3 +369,5 @@ exports.user_pass_update = async (req,res) =>{
   });
 
 };
+
+
