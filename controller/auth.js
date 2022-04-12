@@ -8,8 +8,13 @@ const { Op } = require("sequelize");
 const etoken = require('../models/User/Email_Token');
 
 exports.forgot_Password = async(req,res)=>{
+    if(!req.body.email){
+        res.status(400).send({
+            message: "Email can not be empty!"
+          });
+          return;
+    }
     
-    console.log(req.body.email)
     const us = await user.findOne({where:{email:req.body.email}});
     if(!us){
         return res.status(422).json({error:"User dont exists with that email"});
@@ -27,11 +32,11 @@ exports.forgot_Password = async(req,res)=>{
             }).then((results)=>{
                 transporter.sendMail({
                     to: us.email,
-                    from:"no-reply@ipr.com",
+                    from:"no-replay@ipr.com",
                     subject:"password reset",
                     html:`
                     <p>You requested for password reset</p>
-                    <h5>click in this <a href="http://localhost:4200/reset/${token}">link</a> to reset password</h5>
+                    <h5>click in this <a href="http://localhost:5000/reset/${token}">link</a> to reset password</h5>
                     `
                 })
             })
@@ -49,9 +54,14 @@ exports.forgot_Password = async(req,res)=>{
   
   
 exports.ResetNewPassword = async(req,res)=>{
+    if(!req.body.password){
+        res.status(400).send({
+            message: "Password can not be empty!"
+          });
+          return;
+    }
    const newPassword = req.body.password
-   const sentToken = req.body.token
-   console.log(sentToken,newPassword)
+   const sentToken = req.params.token
    const rt = await retoken.findOne({where:{reset_pass_token:sentToken,expire_token:{[Op.gt]:Date.now()}}})
    if(!rt){
       return res.status(422).json({error:"Try again session expired"})
@@ -69,12 +79,9 @@ exports.ResetNewPassword = async(req,res)=>{
 
    }
 }
-  
-
 
 exports.VerifyEmail = async(req,res)=>{
-    const sentToken = req.body.token
-    console.log()
+    const sentToken = req.params.token
     const et = await etoken.findOne({where:{email_token:sentToken}})
     if(!et){
        return res.status(422).json({error:"Try again session expired"})
@@ -89,4 +96,5 @@ exports.VerifyEmail = async(req,res)=>{
      res.json({message:"Email verified"})
  
     }
- }  
+ }
+  

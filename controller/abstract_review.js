@@ -5,9 +5,8 @@ const are = require('../models/Abstract/abstract_review');
 
 
 exports.abs_review_create =async  (req, res) => {
-    let {proposed_action}=req.body;
+    let {proposed_action,reviewer_name}=req.body;
     const tid = req.params.id
-    console.log(tid)
     if (!proposed_action) {
       res.status(400).send({
         message: "Title can not be empty!"
@@ -23,11 +22,14 @@ exports.abs_review_create =async  (req, res) => {
     
     const track = await tk.findOne({where : {trackid:tid}})
     const abstract = await abs.findOne({where:{title:track.title}})
-
+    const timeElapsed = Date.now();
+    const today = new Date(timeElapsed);
     await are.create({
         proposed_action: proposed_action,
         trackid:tid,
         absid:abstract.absid,
+        reviewer_name:reviewer_name,
+        submitted_date : today.toISOString(),
         uid:null
 
     }).then(

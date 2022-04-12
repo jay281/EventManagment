@@ -43,6 +43,12 @@ const eventPerRoutes = require('./routes/event_person');
 const absReviewRoutes = require('./routes/abstract_review');
 const authRoutes = require('./routes/auth');
 const trackRoutes = require('./routes/track');
+const groupRoutes = require('./routes/group');
+const gmemberRoutes = require('./routes/group_member');
+const formRoutes = require('./routes/forms');
+const formitemRoutes = require('./routes/form_items');
+const regRoutes = require('./routes/registration_data');
+
 
 
 app.use("/", authRoutes);
@@ -58,6 +64,11 @@ app.use("/events/reg/person",eventregperRoutes);
 app.use("events/track",eventAbsTrackRoutes);
 app.use("/events",eventPerRoutes);
 app.use("/events/track",absReviewRoutes);
+app.use("/group",groupRoutes);
+app.use("/group",gmemberRoutes);
+app.use("/events",formRoutes);
+app.use("/events",formitemRoutes);
+app.use("/events",regRoutes);
 
 
 

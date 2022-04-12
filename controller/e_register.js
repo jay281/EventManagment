@@ -1,6 +1,6 @@
-const e_reg = require("../models/Event_Regestration/E_Register");
+const e_reg = require("../models/Event_Registration/E_Register");
 const user = require("../models/User/User");
-const pr = require("../models/Event_Regestration/person");
+const pr = require("../models/Event_Registration/person");
 const eve = require("../models/event/Event");
 
 exports.event_reg = async (req, res) => {

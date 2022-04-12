@@ -15,7 +15,7 @@ router.post("/:eid/tracks/:tid/delete",trackController.DeleteTrack);
 
 
 router.post("/tracks/:tid/permissions/set",trackController.SetTrackPermission);
-router.put("/tracks/:tid/permissions/update",trackController.UpdateTrackPermission);
+router.put("eid/tracks/:tid/permissions/update",trackController.UpdateTrackPermission);
 router.post("/tracks/:tid/permissions/delete", trackController.DeleteTrackPermission);
 
 module.exports=router;

@@ -11,7 +11,7 @@ const Abstract = db.define('abstract', {
   title:{
     type: Sequelize.STRING
   },
-  description:{
+  comments:{
     type: Sequelize.STRING
   },
   submission_comment: {
@@ -24,13 +24,13 @@ const Abstract = db.define('abstract', {
     type: Sequelize.INTEGER,
     defaultValue:0
   },
-  submitted_by:{
+  contribution_type:{
     type: Sequelize.STRING
   },
-  modeified_by:{
+  modified_by:{
     type: Sequelize.STRING
   },
-  modeified_dt:{
+  modified_dt:{
     type: Sequelize.DATEONLY
   },
   judge_id:{

@@ -32,6 +32,72 @@ exports.user_signup =async  (req, res) => {
               });
               return;
             }
+            if (!dob) {
+              res.status(400).send({
+                message: "Date of birth can not be empty!"
+              });
+              return;
+            }
+            if (!address_line1) {
+              res.status(400).send({
+                message: "Address can not be empty!"
+              });
+              return;
+            }
+            if (!city) {
+              res.status(400).send({
+                message: "City can not be empty!"
+              });
+              return;
+            }
+            if (!state) {
+              res.status(400).send({
+                message: "State can not be empty!"
+              });
+              return;
+            }
+            if (!country) {
+              res.status(400).send({
+                message: "Country can not be empty!"
+              });
+              return;
+            }
+            if (!primary_phone_number) {
+              res.status(400).send({
+                message: "Phone number can not be empty!"
+              });
+              return;
+            }
+            if (!username) {
+              res.status(400).send({
+                message: "Username can not be empty!"
+              });
+              return;
+            }
+            if (!alternate_phone_number) {
+              res.status(400).send({
+                message: "Phone number can not be empty!"
+              });
+              return;
+            }
+            if (!affiliation_email_address) {
+              res.status(400).send({
+                message: "Email can not be empty!"
+              });
+              return;
+            }
+            if (!affiliation_name) {
+              res.status(400).send({
+                message: "Name can not be empty!"
+              });
+              return;
+            }
+            if (!affiliation_email_address) {
+              res.status(400).send({
+                message: "Email can not be empty!"
+              });
+              return;
+            }
             let hash= await bcrypt.hash(password,10);
             const us = await user.findOne({where : { email : email}});
             if (us) {
@@ -75,7 +141,7 @@ exports.user_signup =async  (req, res) => {
                         subject:"Verify Email",
                         html:`
                         <p>You requested for verify email</p>
-                        <h5>click in this <a href="http://localhost:4200/verify/${token}">link</a> to verify email</h5>
+                        <h5>click in this <a href="http://localhost:5000/verify/${token}">link</a> to verify email</h5>
                         `
                     })
                 })
@@ -102,19 +168,18 @@ exports.user_login = async(req, res, next) => {
         
           const emt = await etoken.findOne({where:{uid:us.uid}})
           const token= emt.email_token;
-          console.log(token)
           transporter.sendMail({
                   to: us.email,
                   from:"no-replay@ipr.com",
                   subject:"Verify Email",
                   html:`
                   <p>You requested for Verify Email</p>
-                  <h5>click in this <a href="http://localhost:4200/verify/${token}">link</a> to verify email</h5>
+                  <h5>click in this <a href="http://localhost:5000/verify/${token}">link</a> to verify email</h5>
                   `
               })
           
       
-          res.json({message:"Please check your email for verification!"})
+          res.json({message:"Please check your email for verification!!!!!!!"})
         
 
 
@@ -129,7 +194,7 @@ exports.user_login = async(req, res, next) => {
           if (result) {
             const token = jwt.sign(
               {
-                username: us.username,
+                username: user.username,
                 id:us.uid,
                 is_admin:us.is_admin      
               },

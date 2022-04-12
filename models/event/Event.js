@@ -45,7 +45,7 @@ const Event = db.define('event', {
     type:Sequelize.STRING
   },
   keyword:{
-    type: Sequelize.ARRAY(Sequelize.STRING)
+    type:Sequelize.STRING
   }
 });
 

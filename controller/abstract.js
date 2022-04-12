@@ -9,33 +9,28 @@ const ptrack = require("../models/Abstract/proposed_for_track");
 
 
 exports.abs_submit = async (req, res) => {
-    let {title,description,sub_comment,submitted_by} = req.body;
+    let {title,comments,contribution_type} = req.body;
 
     
     if (!title) {
       res.status(400).send({
-        message: "first name can not be empty!"
+        message: "Title can not be empty!"
       });
       return;
     }
-    if (!description) {
+    if (!comments) {
       res.status(400).send({
-        message: "last name can not be empty!"
+        message: "Comments can not be empty!"
       });
       return;
     }
-    if (!sub_comment) {
+    if (!contribution_type) {
       res.status(400).send({
-        message: "email can not be empty!"
+        message: "Contrubution type can not be empty!"
       });
       return;
     }
-    // if (!sub_date) {
-    //     res.status(400).send({
-    //       message: "email can not be empty!"
-    //     });
-    //     return;
-    //   }
+    
 
     const eid = req.params.id;
     if (!eid) {
@@ -49,17 +44,16 @@ exports.abs_submit = async (req, res) => {
     const today = new Date(timeElapsed);
     const abst = await abstract.create({
       title: title,
-      description :description,
-      submission_comment : sub_comment,
+      comments :comments,
+      contribution_type : contribution_type,
       submitted_dt :today.toISOString(),
-      submitted_by:submitted_by,
       eid: eid
     });
 
     const track = await tk.create(
       {
         title:title,
-        description:description,
+        description:comments,
         position: 0,
         eid:eid
       }
@@ -114,7 +108,7 @@ exports.abstract_by_id =(req,res) =>{
     return;
   }
   try{
-    abstract.findOne({ where: {absid: req.params.id} })
+    abstract.findAll({ where: {eid: req.params.id} })
      .then(data=>{
       if (data != null) {
         res.send(data);

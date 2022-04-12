@@ -1,5 +1,5 @@
 
-const pr = require("../models/Event_Regestration/person");
+const pr = require("../models/Event_Registration/person");
 
 
 

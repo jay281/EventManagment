@@ -240,7 +240,8 @@ exports.SetEventPermission = async (req, res) => {
 exports.UpdateEventPermission = async (req, res) => {
   try {
       const { eid } = req.params
-      const ep = await eprincipal.findOne({where:{eid:eid,user_id:req.body.user_id}});
+      const {epid} = req.params
+      const ep = await eprincipal.findOne({where:{eid:eid,user_id:req.body.user_id,epid:epid}});
       ep.permissions = req.body.permissions
       ep.save();
       res.status(200).send({ message: "Permission has been updated for this selected group." })
@@ -252,8 +253,8 @@ exports.UpdateEventPermission = async (req, res) => {
 
 exports.DeleteEventPermission = async (req, res) => {
   try {
-      const eid = req.params
-      await eprincipal.destroy({where:{eid:eid,user_id:req.body.user_id} })
+      const epid = req.params
+      await eprincipal.destroy({where:{epid:epid} })
       res.status(200).send({ message: "User deleted successfully." })
   } catch (err) {
       console.log(err)
